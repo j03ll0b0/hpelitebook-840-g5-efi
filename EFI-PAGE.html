@@ -65,16 +65,16 @@ footer a{color:var(--accent);text-decoration:none;font-weight:600;}
       <h1><em>OpenCore EFI</em> <span class="accent-title">HP EliteBook 840 G5</span></h1>
       <p class="subtitle">Clean, reliable OpenCore EFI for macOS <strong>Tahoe</strong>. Thunderbolt 3 at full 10 Gbps, HDMI mirror, sleep, audio, Wi-Fi and Bluetooth — all working.</p>
       <div class="tags">
-        <span>macOS Tahoe</span><span>OpenCore 1.0.8</span><span>HP 840 G5</span><span>Thunderbolt 3</span><span>i7-8650U</span>
+        <span>macOS Tahoe</span><span>OpenCore 1.0.8</span><span>HP 840 G5</span><span>Thunderbolt 3</span><span>i5-7300U</span>
       </div>
       <a class="btn" href="#status">What Works &rarr;</a>
     </div>
     <div class="laptop-card">
-      <img src="/tmp/img_6977.jpg" alt="HP EliteBook 840 G5 laptop" loading="eager">
+      <img src="/tmp/ref_image.jpg" alt="HP EliteBook 840 G5 laptop" loading="eager">
       <div class="card-badge">HP 840 G5</div>
       <div class="card-body">
         <h3>HP EliteBook 840 G5</h3>
-        <p>14" FHD · i7-8650U · 16 GB DDR4 · Intel UHD 620 · Thunderbolt 3 · 512 GB NVMe</p>
+        <p>14" 1728x1080 · 16:10 · i5-7300U · 24 GB DDR4-2133 · Intel UHD 620 · Thunderbolt 3 · NVMe</p>
       </div>
     </div>
   </div>
@@ -91,7 +91,7 @@ footer a{color:var(--accent);text-decoration:none;font-weight:600;}
       <span style="font-family:'JetBrains Mono',monospace;font-size:.78rem;background:var(--surface-2);padding:6px 14px;border-radius:8px;border:1px solid var(--border);color:var(--text-dim);">OpenCore 1.0.8</span>
       <span style="font-family:'JetBrains Mono',monospace;font-size:.78rem;background:var(--surface-2);padding:6px 14px;border-radius:8px;border:1px solid var(--border);color:var(--text-dim);">macOS 26 Tahoe</span>
       <span style="font-family:'JetBrains Mono',monospace;font-size:.78rem;background:var(--surface-2);padding:6px 14px;border-radius:8px;border:1px solid var(--border);color:var(--text-dim);">SMBIOS MacBookPro16,4</span>
-      <span style="font-family:'JetBrains Mono',monospace;font-size:.78rem;background:var(--surface-2);padding:6px 14px;border-radius:8px;border:1px solid var(--border);color:var(--text-dim);">SSD: CT2000P3PSSD8</span>
+      <span style="font-family:'JetBrains Mono',monospace;font-size:.78rem;background:var(--surface-2);padding:6px 14px;border-radius:8px;border:1px solid var(--border);color:var(--text-dim);">NVMe SSD</span>
     </div>
   </section>
 
@@ -114,17 +114,17 @@ footer a{color:var(--accent);text-decoration:none;font-weight:600;}
         <tr><th>Feature</th><th>Status</th><th>Notes</th></tr>
       </thead>
       <tbody>
-        <tr><td>CPU (i7-8650U)</td><td><span class="ok">OK</span></td><td>Native power management, turbo works</td></tr>
+        <tr><td>CPU (i5-7300U)</td><td><span class="ok">OK</span></td><td>Native power management, turbo works</td></tr>
         <tr><td>Graphics (UHD 620)</td><td><span class="ok">OK</span></td><td>Full acceleration, HDMI mirror </td></tr>
         <tr><td>Thunderbolt 3</td><td><span class="ok">OK</span></td><td>10 Gbps sustained, hot-plug reliable</td></tr>
         <tr><td>Audio (AppleALC)</td><td><span class="ok">OK</span></td><td>Alcid=3, internal speakers + headset jack</td></tr>
         <tr><td>Wi-Fi / Bluetooth</td><td><span class="ok">OK</span></td><td>Intel 8265 via itlwm / IntelBluetoothFirmware</td></tr>
         <tr><td>Sleep / Wake</td><td><span class="ok">OK</span></td><td>Deep sleep, reliable wake via lid / power button</td></tr>
         <tr><td>USB Ports</td><td><span class="ok">OK</span></td><td>USB 3.0 mapped via USBMap.kext</td></tr>
-        <tr><td>NVMe SSD</td><td><span class="ok">OK</span></td><td>Native APFS with NVMeFix</td></tr>
+        <tr><td>NVMe SSD</td><td><span class="ok">OK</span></td><td>NVMe SSD — APST workaround included via NVMeFix</td></tr>
         <tr><td>Battery / Charging</td><td><span class="ok">OK</span></td><td>SMCBatteryManager, accurate percentage</td></tr>
         <tr><td>Keyboard / Trackpad</td><td><span class="ok">OK</span></td><td>VoodooPS2 + VoodooI2C, gestures work</td></tr>
-        <tr><td>Ethernet</td><td><span class="ok">OK</span></td><td>Intel I219-LM works fine with IntelMausi.kext</td></tr>
+        <tr><td>Ethernet</td><td><span class="ok">OK</span></td><td>Intel I219-LM works fine with standard IntelMausi.kext (not VT-d aware); VT-d aware version confirmed not working well on Tahoe, works on Sequoia (Ventura unverified)</td></tr>
         <tr><td>HDMI External</td><td><span class="ok">OK</span></td><td>Mirror mode confirmed</td></tr>
       </tbody>
     </table>
@@ -135,26 +135,26 @@ footer a{color:var(--accent);text-decoration:none;font-weight:600;}
     <div class="grid-2">
       <div class="card">
         <h4><span class="icon">&#9733;</span> System</h4>
-        <p>HP EliteBook 840 G5 · BIOS revision verified · UEFI Secure Boot disabled</p>
+        <p>HP EliteBook 840 G5 · Latest BIOS update applied · UEFI Secure Boot disabled</p>
       </div>
       <div class="card">
         <h4><span class="icon">&#9729;</span> CPU</h4>
-        <p>Intel Core i7-8650U · Kaby Lake-R · 4 cores / 8 threads · 1.9 - 4.2 GHz · Intel UHD Graphics 620</p>
+        <p>Intel Core i5-7300U · Kaby Lake-R · 2 cores / 4 threads · 2.60 GHz · Intel UHD Graphics 620</p>
       </div>
       <div class="card">
         <h4><span class="icon">&#9881;</span> Memory</h4>
-        <p>16 GB DDR4-2400 MHz · Dual-channel · Expandable to 32 GB</p>
+        <p>24 GB DDR4-2133 MHz (8GB Kingston + 16GB CT16G4SFRA32A) · Dual-channel</p>
       </div>
       <div class="card">
         <h4><span class="icon">&#128190;</span> Storage</h4>
-        <p>CT2000P3PSSD8 512 GB NVMe · APFS formatted · NVMeFix loaded</p>
+        <p>NVMe SSD 512 GB · APFS · NVMeFix</p>
       </div>
     </div>
   </section>
 
   <section id="thunderbolt-hdmi" aria-label="Thunderbolt and HDMI details">
     <h2><span class="dot"></span> Thunderbolt 3 & HDMI Details</h2>
-    <p style="color:var(--text-dim);font-size:.95rem;line-height:1.7;margin-bottom:18px;">Thunderbolt operates at full PCIe 3.0 x4 speed — sustained transfers above 10 Gbps have been verified with external NVMe enclosures. The SSDT-TB3.aml patch ensures proper device-tree exposure to macOS. DMAR is patched (DMAR.aml) for VT-d / IOMMU compatibility — required for Thunderbolt stability.</p>
+    <p style="color:var(--text-dim);font-size:.95rem;line-height:1.7;margin-bottom:18px;">Thunderbolt operates at full PCIe 3.0 x4 speed — sustained transfers above 10 Gbps have been verified with external NVMe enclosures. SSDT-TB3.aml ensures device-tree exposure. DMAR.aml is present (VT-d / IOMMU table). Any link between DMAR and Thunderbolt behavior has not been independently verified; the user stayed on Tahoe and did not test previous macOS versions for this interaction.</p>
     <p style="color:var(--text-dim);font-size:.95rem;line-height:1.7;margin-bottom:18px;">HDMI mirror mode works correctly. The external display receives the same signal as the internal panel. Framebuffer properties (enable-hdmi-dividers-fix, AAPL,GfxYTile, framebuffer settings) are configured for compatibility.</p>
     <div class="code-block" style="margin-top:16px;">
 <span class="comment"># DeviceProperties — Thunderbolt 3 Controller</span>
@@ -187,7 +187,46 @@ PciRoot(<span class="str">0x0</span>)/Pci(<span class="str">0x1C,0x4</span>)/Pci
     </div>
   </section>
 
-  <section id="files" aria-label="Files">
+  
+  <section id="kexts" aria-label="Kernel extensions">
+    <h2><span class="dot"></span> Kernel Extensions (Kexts)</h2>
+    <p style="color:var(--text-dim);font-size:.9rem;margin-bottom:14px;">Status read from <code>OC/config.plist</code> Kernel → Add array. ON = enabled; OFF = disabled.</p>
+    <table class="status-table" aria-label="Kext status table">
+      <thead><tr><th>Kext</th><th>Status</th><th>Purpose / Hardware</th></tr></thead>
+      <tbody>
+        <tr><td>Lilu.kext</td><td><span class="ok">ON</span></td><td>Patch engine for AppleALC, WhateverGreen, etc.</td></tr>
+        <tr><td>AppleALC.kext</td><td><span class="ok">ON</span></td><td>Audio codec patching (Sunrise Point-LP HD Audio)</td></tr>
+        <tr><td>WhateverGreen.kext</td><td><span class="ok">ON</span></td><td>Graphics acceleration / framebuffer fixes (UHD 620)</td></tr>
+        <tr><td>VirtualSMC.kext</td><td><span class="ok">ON</span></td><td>SMC emulation (VirtualSMC + plugins)</td></tr>
+        <tr><td>SMCProcessor.kext</td><td><span class="ok">ON</span></td><td>CPU temperature / power sensors</td></tr>
+        <tr><td>SMCSuperIO.kext</td><td><span class="ok">ON</span></td><td>Super I/O monitoring</td></tr>
+        <tr><td>SMCBatteryManager.kext</td><td><span class="ok">ON</span></td><td>Battery reporting</td></tr>
+        <tr><td>SMCLightSensor.kext</td><td><span class="ok">ON</span></td><td>Ambient light sensor — not confirmed if needed</td></tr>
+        <tr><td>AMFIPass.kext</td><td><span class="ok">ON</span></td><td>AMFI pass — follows OCLP tutorial, not exclusive to Tahoe</td></tr>
+        <tr><td>IOSkywalkFamily.kext</td><td><span class="ok">ON</span></td><td>Skywalk network stack (Intel Wi-Fi) — present because follows updated OCLP tutorial in active maintenance</td></tr>
+        <tr><td>IO80211FamilyLegacy.kext</td><td><span class="ok">ON</span></td><td>Legacy 802.11 framework (base) — present because follows updated OCLP tutorial in active maintenance</td></tr>
+        <tr><td>AirPortBrcmNIC.kext</td><td><span class="warn">OFF</span></td><td>Not needed; present in files but disabled</td></tr>
+        <tr><td>AirportItlwm.kext</td><td><span class="ok">ON</span></td><td>Intel Wi-Fi driver (8265 / 8275)</td></tr>
+        <tr><td>itlwm.kext</td><td><span class="warn">OFF</span></td><td>Direct itlwm — disabled</td></tr>
+        <tr><td>Intel Bluetooth (3 kexts)</td><td><span class="ok">ON</span></td><td>IntelBluetoothFirmware + BlueToolFixup + IntelBTPatcher</td></tr>
+        <tr><td>IntelMausiEthernet.kext</td><td><span class="warn">OFF</span></td><td>Ethernet version with VT-d/IOMMU awareness; confirmed not working well on Tahoe; works on previous macOS versions such as Sequoia (Ventura unverified)</td></tr>
+        <tr><td>IntelMausi.kext</td><td><span class="ok">ON</span></td><td>Ethernet I219-LM driver (standard version without VT-d/IOMMU support)</td></tr>
+        <tr><td>HoRNDIS.kext</td><td><span class="ok">ON</span></td><td>USB tethering / RNDIS support</td></tr>
+        <tr><td>CpuTscSync.kext</td><td><span class="warn">OFF</span></td><td>TSC sync — a discreción; probado sin mejora visible, desactivado por defecto</td></tr>
+        <tr><td>USBMap.kext</td><td><span class="ok">ON</span></td><td>USB port mapping</td></tr>
+        <tr><td>NVMeFix.kext</td><td><span class="ok">ON</span></td><td>Workaround for SSD misbehavior when APST is active; detects broken motherboard + SSD combos</td></tr>
+        <tr><td>RestrictEvents.kext</td><td><span class="ok">ON</span></td><td>Restricts system events to prevent hardware event conflicts with macOS (research: Lilu plugin used in OCLP builds)</td></tr>
+        <tr><td>CPUFriend.kext</td><td><span class="warn">OFF</span></td><td>Disabled in favor of native CPU mgmt</td></tr>
+        <tr><td>CPUFriendDataProvider.kext</td><td><span class="warn">OFF</span></td><td>Disabled in favor of native CPU mgmt</td></tr>
+        <tr><td>VoodooPS2 (controller + plugins)</td><td><span class="ok">ON</span></td><td>Keyboard / mouse / trackpad controller with input plugins (PS2 + trackpad gestures)</td></tr>
+        <tr><td>VoodooI2C + plugins (3 kexts)</td><td><span class="ok">ON</span></td><td>I2C support (controller + services + HID + GPIO)</td></tr>
+        <tr><td>ECEnabler.kext</td><td><span class="ok">ON</span></td><td>Embedded controller (battery, sensors)</td></tr>
+        <tr><td>HibernationFixup.kext</td><td><span class="ok">ON</span></td><td>Sleep / wake stability (deep sleep works)</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+<section id="files" aria-label="Files">
     <h2><span class="dot"></span> File Layout</h2>
     <p style="color:var(--text-dim);font-size:.95rem;line-height:1.7;margin-bottom:14px;">The clean EFI folder is saved at <code>/Users/usuario/Desktop/EFI-CLEAN</code>. Sensitive config fields have placeholders. Replace them before booting.</p>
     <pre class="code-block" style="font-size:.8rem;line-height:1.6;">
@@ -196,7 +235,7 @@ EFI/
     BOOTx64.efi
   OC/
     ACPI/          → SSDT-PLUG, SSDT-PNLF, SSDT-TB3, SSDT-ALS0,
-                      SSDT-EC-USBX, DMAR, etc.
+                      SSDT-EC-USBX, DMAR (VT-d/IOMMU table included), etc.
     Drivers/       → OpenRuntime, HfsPlus, AudioDxe, etc.
     Kexts/         → Lilu, WhateverGreen, VirtualSMC, AppleALC,
                       IntelMausi, AirportItlwm, itlwm, USBMap,
@@ -210,7 +249,7 @@ EFI/
 </main>
 
 <footer>
-  <p>HP EliteBook 840 G5 OpenCore EFI · macOS Tahoe · Page created with Hermes agent assistance · Built on open-source work by yusufklncc, kmasterycsl, timbachmann, tblesshack</p>
+  <p>HP EliteBook 840 G5 OpenCore EFI · macOS Tahoe · Created & supported by jellobo · Built on open-source work by yusufklncc, kmasterycsl, timbachmann, tblesshack</p>
   <p style="margin-top:8px;">Sensitive identifiers removed. Placeholders in <code>config.plist</code> must be replaced with your own before use.</p>
 </footer>
 
