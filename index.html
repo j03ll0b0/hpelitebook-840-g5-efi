@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HP EliteBook 840 G5 — OpenCore EFI (macOS Tahoe)</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800;900&family=JetBrains+Mono:wght@400;600&display=swap');
+:root{--bg:#0b0d10;--surface:#12141a;--surface-2:#181a23;--text:#e8e6e3;--text-dim:#9fa0a8;--accent:#c9a96e;--accent-2:#6ea0c9;--green:#6ec97a;--red:#c96e6e;--border:#23242e;--radius:16px;--shadow:0 24px 60px rgba(0,0,0,.65);}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.55;overflow-x:hidden;}
+.hero{position:relative;min-height:92vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(160deg,#0b0d10 0%,#12141a 55%,#16182a 100%);overflow:hidden;}
+.hero::before{content:'';position:absolute;inset:0;background:url('https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=1600&q=85') center 35%/cover;opacity:.28;filter:grayscale(40%) contrast(1.1);}
+.hero-inner{position:relative;z-index:2;max-width:1100px;padding:120px 32px 80px;display:grid;grid-template-columns:1.1fr .9fr;gap:56px;align-items:center;}
+.hero h1{font-weight:900;font-size:clamp(2.6rem,4.5vw,4.2rem);line-height:1.08;letter-spacing:-.035em;text-wrap:balance;}
+.hero h1 em{font-style:normal;color:var(--accent);display:block;font-size:.55em;font-weight:600;letter-spacing:.12em;text-transform:uppercase;margin-bottom:.35em;}
+.hero h1 span.accent-title{color:var(--accent);}
+.hero .subtitle{color:var(--text-dim);font-size:1.15rem;margin-top:18px;max-width:480px;}
+.hero .tags{margin-top:28px;display:flex;gap:10px;flex-wrap:wrap;}
+.hero .tags span{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);padding:6px 14px;border-radius:99px;font-size:.78rem;font-family:'JetBrains Mono',monospace;color:var(--text-dim);letter-spacing:.02em;}
+.hero .btn{display:inline-block;margin-top:36px;padding:14px 28px;background:var(--accent);color:#0b0d10;font-weight:800;border-radius:12px;text-decoration:none;font-size:.95rem;letter-spacing:.02em;box-shadow:0 8px 28px rgba(201,169,110,.25);transition:.2s;}
+.hero .btn:hover{transform:translateY(-2px);box-shadow:0 14px 32px rgba(201,169,110,.35);}
+.hero .laptop-card{position:relative;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);}
+.hero .laptop-card img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover;filter:brightness(.92) contrast(1.05);}
+.hero .laptop-card .card-badge{position:absolute;top:18px;left:18px;background:rgba(201,169,110,.92);color:#0b0d10;font-family:'JetBrains Mono',monospace;font-weight:800;font-size:.78rem;padding:6px 14px;border-radius:99px;letter-spacing:.02em;box-shadow:0 4px 14px rgba(201,169,110,.25);}
+.hero .laptop-card .card-body{padding:22px 24px 24px;border-top:1px solid var(--border);}
+.hero .laptop-card .card-body h3{font-size:1.05rem;font-weight:700;letter-spacing:-.01em;}
+.hero .laptop-card .card-body p{font-size:.85rem;color:var(--text-dim);margin-top:6px;}
+main{max-width:980px;margin:0 auto;padding:80px 32px 120px;}
+section{margin-bottom:72px;}
+section h2{font-size:1.35rem;font-weight:800;letter-spacing:-.025em;margin-bottom:24px;display:flex;align-items:center;gap:12px;}
+section h2 .dot{width:8px;height:8px;border-radius:50%;background:var(--accent);display:inline-block;}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:22px;}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:26px;transition:.15s;}
+.card:hover{border-color:rgba(255,255,255,.12);transform:translateY(-2px);box-shadow:0 12px 30px rgba(0,0,0,.35);}
+.card h4{font-size:1rem;font-weight:700;margin-bottom:8px;display:flex;align-items:center;gap:10px;}
+.card h4 .icon{width:28px;height:28px;border-radius:8px;background:rgba(201,169,110,.15);color:var(--accent);display:inline-flex;align-items:center;justify-content:center;font-size:.85rem;}
+.card p{font-size:.88rem;color:var(--text-dim);line-height:1.6;}
+.status-table{width:100%;border-collapse:collapse;font-size:.9rem;}
+.status-table th{background:var(--surface-2);text-align:left;padding:14px 16px;font-weight:700;color:var(--text-dim);font-size:.78rem;text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid var(--border);}
+.status-table td{padding:14px 16px;border-bottom:1px solid var(--border);color:var(--text);}
+.status-table td .ok{color:var(--green);font-weight:700;font-family:'JetBrains Mono',monospace;}
+.status-table td .warn{color:#e0b060;font-weight:700;font-family:'JetBrains Mono',monospace;}
+.status-table td .note{font-size:.8rem;color:var(--text-dim);margin-top:4px;}
+.code-block{background:#0d0e14;border:1px solid var(--border);border-radius:12px;padding:22px 24px;font-family:'JetBrains Mono',monospace;font-size:.82rem;color:#d4cfbd;overflow-x:auto;line-height:1.65;}
+.code-block .key{color:#6ea0c9;font-weight:600;}
+.code-block .val{color:#c9a96e;}
+.code-block .comment{color:#6e8a7a;font-style:italic;}
+.code-block .str{color:#8ab88e;}
+.ref-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px;}
+.ref-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:24px;text-decoration:none;color:inherit;transition:.15s;}
+.ref-card:hover{border-color:rgba(255,255,255,.15);transform:translateY(-2px);}
+.ref-card h5{font-size:.92rem;font-weight:700;margin-bottom:6px;color:var(--text);}
+.ref-card span{font-size:.78rem;color:var(--text-dim);font-family:'JetBrains Mono',monospace;}
+footer{border-top:1px solid var(--border);padding:60px 32px;text-align:center;color:var(--text-dim);font-size:.85rem;}
+footer a{color:var(--accent);text-decoration:none;font-weight:600;}
+@media(max-width:860px){.hero-inner{grid-template-columns:1fr;}.grid-2{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+
+<section class="hero" aria-label="Hero">
+  <div class="hero-inner">
+    <div>
+      <h1><em>OpenCore EFI</em> <span class="accent-title">HP EliteBook 840 G5</span></h1>
+      <p class="subtitle">Clean, reliable OpenCore EFI for macOS <strong>Tahoe</strong>. Thunderbolt 3 at full 10 Gbps, HDMI mirror, sleep, audio, Wi-Fi and Bluetooth — all working.</p>
+      <div class="tags">
+        <span>macOS Tahoe</span><span>OpenCore 1.0.8</span><span>HP 840 G5</span><span>Thunderbolt 3</span><span>i5-7300U</span>
+      </div>
+      <a class="btn" href="#status">What Works &rarr;</a>
+    </div>
+    <div class="laptop-card">
+      <img src="/tmp/ref_image.jpg" alt="HP EliteBook 840 G5 laptop" loading="eager">
+      <div class="card-badge">HP 840 G5</div>
+      <div class="card-body">
+        <h3>HP EliteBook 840 G5</h3>
+        <p>14" 1728x1080 · 16:10 · i5-7300U · 24 GB DDR4-2133 · Intel UHD 620 · Thunderbolt 3 · NVMe</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<main>
+
+  <section id="about" aria-label="About this EFI">
+    <h2><span class="dot"></span> About this EFI</h2>
+    <p style="color:var(--text-dim);font-size:1.05rem;line-height:1.75;max-width:720px;">
+      This is a production OpenCore EFI built for the <strong>HP EliteBook 840 G5</strong> running <strong>macOS Tahoe</strong>. It is derived from the well-known open-source projects by <strong>yusufklncc</strong>, <strong>kmasterycsl</strong>, and <strong>timbachmann</strong> (see references below). The build emphasizes stability: sleep works reliably, Thunderbolt 3 operates at full bandwidth, and HDMI mirror mode displays correctly .
+    </p>
+    <div style="margin-top:24px;display:flex;gap:12px;flex-wrap:wrap;">
+      <span style="font-family:'JetBrains Mono',monospace;font-size:.78rem;background:var(--surface-2);padding:6px 14px;border-radius:8px;border:1px solid var(--border);color:var(--text-dim);">OpenCore 1.0.8</span>
+      <span style="font-family:'JetBrains Mono',monospace;font-size:.78rem;background:var(--surface-2);padding:6px 14px;border-radius:8px;border:1px solid var(--border);color:var(--text-dim);">macOS 26 Tahoe</span>
+      <span style="font-family:'JetBrains Mono',monospace;font-size:.78rem;background:var(--surface-2);padding:6px 14px;border-radius:8px;border:1px solid var(--border);color:var(--text-dim);">SMBIOS MacBookPro16,4</span>
+      <span style="font-family:'JetBrains Mono',monospace;font-size:.78rem;background:var(--surface-2);padding:6px 14px;border-radius:8px;border:1px solid var(--border);color:var(--text-dim);">NVMe SSD</span>
+    </div>
+  </section>
+
+  <section id="clean-config" aria-label="Clean config note">
+    <h2><span class="dot"></span> Clean Config Note</h2>
+    <p style="color:var(--text-dim);font-size:.95rem;line-height:1.65;margin-bottom:14px;">Sensitive identifiers in <code>config.plist</code> have been replaced with placeholders before publication. Fill in your own values before booting:</p>
+    <div class="code-block">
+<span class="comment"># PlatformInfo &rarr; Generic — must be unique per machine</span>
+<span class="key">MLB</span>: <span class="str">"&lt;PLACEHOLDER_MLB&gt;"</span>  <span class="comment">← your Main Logic Board serial</span>
+<span class="key">ROM</span>: <span class="str">"&lt;PLACEHOLDER_ROM&gt;"</span>  <span class="comment">← base64 Ethernet MAC / ROM</span>
+<span class="key">SystemSerialNumber</span>: <span class="str">"&lt;PLACEHOLDER_SERIAL&gt;"</span>
+<span class="key">SystemUUID</span>: <span class="str">"&lt;PLACEHOLDER_UUID&gt;"</span>  <span class="comment">← generate or copy from a real Mac</span>
+    </div>
+  </section>
+
+  <section id="status" aria-label="What works">
+    <h2><span class="dot"></span> What Works</h2>
+    <table class="status-table" aria-label="Status table">
+      <thead>
+        <tr><th>Feature</th><th>Status</th><th>Notes</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>CPU (i5-7300U)</td><td><span class="ok">OK</span></td><td>Native power management, turbo works</td></tr>
+        <tr><td>Graphics (UHD 620)</td><td><span class="ok">OK</span></td><td>Full acceleration, HDMI mirror </td></tr>
+        <tr><td>Thunderbolt 3</td><td><span class="ok">OK</span></td><td>10 Gbps sustained, hot-plug reliable</td></tr>
+        <tr><td>Audio (AppleALC)</td><td><span class="ok">OK</span></td><td>Alcid=3, internal speakers + headset jack</td></tr>
+        <tr><td>Wi-Fi / Bluetooth</td><td><span class="ok">OK</span></td><td>Intel 8265 via itlwm / IntelBluetoothFirmware</td></tr>
+        <tr><td>Sleep / Wake</td><td><span class="ok">OK</span></td><td>Deep sleep, reliable wake via lid / power button</td></tr>
+        <tr><td>USB Ports</td><td><span class="ok">OK</span></td><td>USB 3.0 mapped via USBMap.kext</td></tr>
+        <tr><td>NVMe SSD</td><td><span class="ok">OK</span></td><td>NVMe SSD — APST workaround included via NVMeFix</td></tr>
+        <tr><td>Battery / Charging</td><td><span class="ok">OK</span></td><td>SMCBatteryManager, accurate percentage</td></tr>
+        <tr><td>Keyboard / Trackpad</td><td><span class="ok">OK</span></td><td>VoodooPS2 + VoodooI2C, gestures work</td></tr>
+        <tr><td>Ethernet</td><td><span class="ok">OK</span></td><td>Intel I219-LM works fine with standard IntelMausi.kext (not VT-d aware); VT-d aware version confirmed not working well on Tahoe, works on Sequoia (Ventura unverified)</td></tr>
+        <tr><td>HDMI External</td><td><span class="ok">OK</span></td><td>Mirror mode confirmed</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section id="specs" aria-label="Specs">
+    <h2><span class="dot"></span> Hardware Specs</h2>
+    <div class="grid-2">
+      <div class="card">
+        <h4><span class="icon">&#9733;</span> System</h4>
+        <p>HP EliteBook 840 G5 · Latest BIOS update applied · UEFI Secure Boot disabled</p>
+      </div>
+      <div class="card">
+        <h4><span class="icon">&#9729;</span> CPU</h4>
+        <p>Intel Core i5-7300U · Kaby Lake-R · 2 cores / 4 threads · 2.60 GHz · Intel UHD Graphics 620</p>
+      </div>
+      <div class="card">
+        <h4><span class="icon">&#9881;</span> Memory</h4>
+        <p>24 GB DDR4-2133 MHz (8GB Kingston + 16GB CT16G4SFRA32A) · Dual-channel</p>
+      </div>
+      <div class="card">
+        <h4><span class="icon">&#128190;</span> Storage</h4>
+        <p>NVMe SSD 512 GB · APFS · NVMeFix</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="thunderbolt-hdmi" aria-label="Thunderbolt and HDMI details">
+    <h2><span class="dot"></span> Thunderbolt 3 & HDMI Details</h2>
+    <p style="color:var(--text-dim);font-size:.95rem;line-height:1.7;margin-bottom:18px;">Thunderbolt operates at full PCIe 3.0 x4 speed — sustained transfers above 10 Gbps have been verified with external NVMe enclosures. SSDT-TB3.aml ensures device-tree exposure. DMAR.aml is present (VT-d / IOMMU table). Any link between DMAR and Thunderbolt behavior has not been independently verified; the user stayed on Tahoe and did not test previous macOS versions for this interaction.</p>
+    <p style="color:var(--text-dim);font-size:.95rem;line-height:1.7;margin-bottom:18px;">HDMI mirror mode works correctly. The external display receives the same signal as the internal panel. Framebuffer properties (enable-hdmi-dividers-fix, AAPL,GfxYTile, framebuffer settings) are configured for compatibility.</p>
+    <div class="code-block" style="margin-top:16px;">
+<span class="comment"># DeviceProperties — Thunderbolt 3 Controller</span>
+PciRoot(<span class="str">0x0</span>)/Pci(<span class="str">0x1C,0x4</span>)/Pci(<span class="str">0x0,0x0</span>)/Pci(<span class="str">0x0,0x0</span>)/Pci(<span class="str">0x0,0x0</span>)
+  device_type = <span class="str">"Thunderbolt 3 Controller"</span>
+  model      = <span class="str">"Intel Thunderbolt 3 Controller"</span>
+    </div>
+  </section>
+
+  <section id="references" aria-label="References">
+    <h2><span class="dot"></span> References</h2>
+    <p style="color:var(--text-dim);font-size:.9rem;margin-bottom:20px;">This EFI builds on work from these open-source repositories. Please review them for updates, patches, and additional compatibility notes.</p>
+    <div class="ref-grid" aria-label="Reference links">
+      <a class="ref-card" href="https://github.com/yusufklncc/HP-EliteBook-840-G5-Hackintosh" target="_blank" rel="noopener noreferrer">
+        <h5>yusufklncc / HP-EliteBook-840-G5-Hackintosh</h5>
+        <span>OpenCore EFI for Hackintosh HP Elitebook 840 G5</span>
+      </a>
+      <a class="ref-card" href="https://github.com/kmasterycsl/hpelitebook840g5-opencore" target="_blank" rel="noopener noreferrer">
+        <h5>kmasterycsl / hpelitebook840g5-opencore</h5>
+        <span>Opencore for HP EliteBook 840 G5 (Nov 2020 build)</span>
+      </a>
+      <a class="ref-card" href="https://github.com/timbachmann/hpelitebook840g5-opencore" target="_blank" rel="noopener noreferrer">
+        <h5>timbachmann / hpelitebook840g5-opencore</h5>
+        <span>Based on hpelitebook850g5-opencore + OpenCore-Install-Guide</span>
+      </a>
+      <a class="ref-card" href="https://github.com/tblesshack/HP-EliteBook-840-G5-Opencore" target="_blank" rel="noopener noreferrer">
+        <h5>tblesshack / HP-EliteBook-840-G5-Opencore</h5>
+        <span>Sonoma / Tahoe build for HP EliteBook 840 G5</span>
+      </a>
+    </div>
+  </section>
+
+  
+  <section id="kexts" aria-label="Kernel extensions">
+    <h2><span class="dot"></span> Kernel Extensions (Kexts)</h2>
+    <p style="color:var(--text-dim);font-size:.9rem;margin-bottom:14px;">Status read from <code>OC/config.plist</code> Kernel → Add array. ON = enabled; OFF = disabled.</p>
+    <table class="status-table" aria-label="Kext status table">
+      <thead><tr><th>Kext</th><th>Status</th><th>Purpose / Hardware</th></tr></thead>
+      <tbody>
+        <tr><td>Lilu.kext</td><td><span class="ok">ON</span></td><td>Patch engine for AppleALC, WhateverGreen, etc.</td></tr>
+        <tr><td>AppleALC.kext</td><td><span class="ok">ON</span></td><td>Audio codec patching (Sunrise Point-LP HD Audio)</td></tr>
+        <tr><td>WhateverGreen.kext</td><td><span class="ok">ON</span></td><td>Graphics acceleration / framebuffer fixes (UHD 620)</td></tr>
+        <tr><td>VirtualSMC.kext</td><td><span class="ok">ON</span></td><td>SMC emulation (VirtualSMC + plugins)</td></tr>
+        <tr><td>SMCProcessor.kext</td><td><span class="ok">ON</span></td><td>CPU temperature / power sensors</td></tr>
+        <tr><td>SMCSuperIO.kext</td><td><span class="ok">ON</span></td><td>Super I/O monitoring</td></tr>
+        <tr><td>SMCBatteryManager.kext</td><td><span class="ok">ON</span></td><td>Battery reporting</td></tr>
+        <tr><td>SMCLightSensor.kext</td><td><span class="ok">ON</span></td><td>Ambient light sensor — not confirmed if needed</td></tr>
+        <tr><td>AMFIPass.kext</td><td><span class="ok">ON</span></td><td>AMFI pass — follows OCLP tutorial, not exclusive to Tahoe</td></tr>
+        <tr><td>IOSkywalkFamily.kext</td><td><span class="ok">ON</span></td><td>Skywalk network stack (Intel Wi-Fi) — present because follows updated OCLP tutorial in active maintenance</td></tr>
+        <tr><td>IO80211FamilyLegacy.kext</td><td><span class="ok">ON</span></td><td>Legacy 802.11 framework (base) — present because follows updated OCLP tutorial in active maintenance</td></tr>
+        <tr><td>AirPortBrcmNIC.kext</td><td><span class="warn">OFF</span></td><td>Not needed; present in files but disabled</td></tr>
+        <tr><td>AirportItlwm.kext</td><td><span class="ok">ON</span></td><td>Intel Wi-Fi driver (8265 / 8275)</td></tr>
+        <tr><td>itlwm.kext</td><td><span class="warn">OFF</span></td><td>Direct itlwm — disabled</td></tr>
+        <tr><td>Intel Bluetooth (3 kexts)</td><td><span class="ok">ON</span></td><td>IntelBluetoothFirmware + BlueToolFixup + IntelBTPatcher</td></tr>
+        <tr><td>IntelMausiEthernet.kext</td><td><span class="warn">OFF</span></td><td>Ethernet version with VT-d/IOMMU awareness; confirmed not working well on Tahoe; works on previous macOS versions such as Sequoia (Ventura unverified)</td></tr>
+        <tr><td>IntelMausi.kext</td><td><span class="ok">ON</span></td><td>Ethernet I219-LM driver (standard version without VT-d/IOMMU support)</td></tr>
+        <tr><td>HoRNDIS.kext</td><td><span class="ok">ON</span></td><td>USB tethering / RNDIS support</td></tr>
+        <tr><td>CpuTscSync.kext</td><td><span class="warn">OFF</span></td><td>TSC sync — a discreción; probado sin mejora visible, desactivado por defecto</td></tr>
+        <tr><td>USBMap.kext</td><td><span class="ok">ON</span></td><td>USB port mapping</td></tr>
+        <tr><td>NVMeFix.kext</td><td><span class="ok">ON</span></td><td>Workaround for SSD misbehavior when APST is active; detects broken motherboard + SSD combos</td></tr>
+        <tr><td>RestrictEvents.kext</td><td><span class="ok">ON</span></td><td>Restricts system events to prevent hardware event conflicts with macOS (research: Lilu plugin used in OCLP builds)</td></tr>
+        <tr><td>CPUFriend.kext</td><td><span class="warn">OFF</span></td><td>Disabled in favor of native CPU mgmt</td></tr>
+        <tr><td>CPUFriendDataProvider.kext</td><td><span class="warn">OFF</span></td><td>Disabled in favor of native CPU mgmt</td></tr>
+        <tr><td>VoodooPS2 (controller + plugins)</td><td><span class="ok">ON</span></td><td>Keyboard / mouse / trackpad controller with input plugins (PS2 + trackpad gestures)</td></tr>
+        <tr><td>VoodooI2C + plugins (3 kexts)</td><td><span class="ok">ON</span></td><td>I2C support (controller + services + HID + GPIO)</td></tr>
+        <tr><td>ECEnabler.kext</td><td><span class="ok">ON</span></td><td>Embedded controller (battery, sensors)</td></tr>
+        <tr><td>HibernationFixup.kext</td><td><span class="ok">ON</span></td><td>Sleep / wake stability (deep sleep works)</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+<section id="files" aria-label="Files">
+    <h2><span class="dot"></span> File Layout</h2>
+    <p style="color:var(--text-dim);font-size:.95rem;line-height:1.7;margin-bottom:14px;">The clean EFI folder is saved at <code>/Users/usuario/Desktop/EFI-CLEAN</code>. Sensitive config fields have placeholders. Replace them before booting.</p>
+    <pre class="code-block" style="font-size:.8rem;line-height:1.6;">
+EFI/
+  BOOT/
+    BOOTx64.efi
+  OC/
+    ACPI/          → SSDT-PLUG, SSDT-PNLF, SSDT-TB3, SSDT-ALS0,
+                      SSDT-EC-USBX, DMAR (VT-d/IOMMU table included), etc.
+    Drivers/       → OpenRuntime, HfsPlus, AudioDxe, etc.
+    Kexts/         → Lilu, WhateverGreen, VirtualSMC, AppleALC,
+                      IntelMausi, AirportItlwm, itlwm, USBMap,
+                      NVMeFix, VoodooPS2, VoodooI2C, etc.
+    Tools/         → OpenShell, CleanNvram, ResetSystem,
+                      memtest64, OpenControl
+    config.plist   → <span class="str">CLEANED: placeholders for MLB / ROM / Serial / UUID</span>
+</pre>
+  </section>
+
+</main>
+
+<footer>
+  <p>HP EliteBook 840 G5 OpenCore EFI · macOS Tahoe · Created & supported by jellobo · Built on open-source work by yusufklncc, kmasterycsl, timbachmann, tblesshack</p>
+  <p style="margin-top:8px;">Sensitive identifiers removed. Placeholders in <code>config.plist</code> must be replaced with your own before use.</p>
+</footer>
+
+</body>
+</html>
